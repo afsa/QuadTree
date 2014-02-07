@@ -1,19 +1,17 @@
 package se.afsa.quadtree;
 
-public class QuadTree {
+import java.util.List;
+
+public class QuadTree<E extends QuadTreeElement> {
 	private int
 			maxDepth,
 			maxObjectsPerRectangle;
-	
-	private final int[]
-			x,
-			y;
+	private QuadTreeNode<E> root;
 			
-	public QuadTree(int maxDepth, int maxObjectsPerRectangle, int[] x, int[] y) {
+	public QuadTree(int maxDepth, int maxObjectsPerRectangle, Bounds area) {
 		this.maxDepth = maxDepth;
 		this.maxObjectsPerRectangle = maxObjectsPerRectangle;
-		this.x = x;
-		this.y = y;
+		root = new QuadTreeNode<>(0, area, this);
 	}
 	
 	public int getMaxDepth() {
@@ -22,5 +20,23 @@ public class QuadTree {
 	
 	public int getMaxObjectsPerRectangle() {
 		return maxObjectsPerRectangle;
+	}
+	
+	public void addEntity(E entity) {
+		root.addEntity(entity);
+	}
+	
+	public void addEntities(List<E> entities) {
+		for (int i = 0; i < entities.size(); i++) {
+			addEntity(entities.get(i));
+		}
+	}
+	
+	public <T extends QuadTreeElement> void clear(Class<T> className) {
+		
+	}
+	
+	public void clear() {
+		clear(QuadTreeElement.class);
 	}
 }
