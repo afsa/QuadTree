@@ -7,6 +7,10 @@ public class Bounds {
 		setValues(minX, maxX, minY, maxY);
 	}
 	
+	public Bounds() {
+		setValues(0, 0, 0, 0);
+	}
+	
 	public void setValues(double minX, double maxX, double minY, double maxY) {
 		values[0] = minX;
 		values[1] = maxX;
@@ -31,11 +35,11 @@ public class Bounds {
 	}
 	
 	public double getMidX() {
-		return (getMinX()+getMaxY())/2;
+		return (getMinX()+getMaxX())/2;
 	}
 	
 	public double getMidY() {
-		return (getMinY()-getMaxY())/2;
+		return (getMinY()+getMaxY())/2;
 	}
 	
 	public Bounds split(int i) {
@@ -45,5 +49,9 @@ public class Bounds {
 			tempMinY = (i == 1 || i == 0) ? getMidY() : getMinY(),
 			tempMaxY = (i == 2 || i == 3) ? getMidY() : getMaxY();
 		return new Bounds(tempMinX, tempMaxX, tempMinY, tempMaxY);
+	}
+	
+	public String toString() {
+		return "x-min: " + getMinX() + " x-max: " + getMaxX() + " y-min: " + getMinY() + " y-max: " + getMaxY();
 	}
 }
