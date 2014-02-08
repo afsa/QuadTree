@@ -45,7 +45,6 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 	}
 	
 	protected int countEntities() {
-		System.out.println(depthLevel + "  " + entitiesLength + " " + area.toString());
 		int tot = entitiesLength;
 		if(!children.isEmpty()) {
 			for (int i = 0; i < numberOfChildren; i++) {
@@ -69,12 +68,12 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 	}
 	
 	protected void addEntity(E entity) {		
-		if(!children.isEmpty() || (entitiesLength >= tree.getMaxObjectsPerRectangle() && depthLevel < tree.getMaxDepth())) {
-			if(children.isEmpty()) {
+		if(hasChildren() || (entitiesLength >= tree.getMaxObjectsPerRectangle() && depthLevel < tree.getMaxDepth())) {
+			if(!hasChildren()) {
 				split();
 			}
 			
-			int index = getIndex(entity.bounds());
+			int index = getIndex(entity.bounds()); 
 			
 			if(index != -1) {
 				children.get(index).addEntity(entity);
@@ -89,7 +88,7 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		int x, y;
 		
 		x = (bounds.getMinX() > area.getMidX() && bounds.getMaxX() < area.getMaxX()) ? 1 : ((bounds.getMaxX() < area.getMidX() && bounds.getMinX() > area.getMinX()) ? -1 : 0);
-		y = (bounds.getMinY() > area.getMidY() && bounds.getMaxY() < area.getMaxY()) ? 1 : ((bounds.getMaxY() < area.getMaxY() && bounds.getMinY() > area.getMinY()) ? -1 : 0);
+		y = (bounds.getMinY() > area.getMidY() && bounds.getMaxY() < area.getMaxY()) ? 1 : ((bounds.getMaxY() < area.getMidY() && bounds.getMinY() > area.getMinY()) ? -1 : 0);
 		
 		if(x == 0 || y == 0) {
 			return -1;
@@ -177,13 +176,15 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		List<E> temp = new ArrayList<>();
 		int index = getIndex(bounds);
 		
+		if(!hasChildren()) {
+			return new ArrayList<>(entities);
+		}
+		
 		if(index == -1) {
 			temp.addAll(getAllChildNodeEntities());
-		} else if(!children.isEmpty()) {
-			temp.addAll(entities);
-			temp.addAll(children.get(index).possibleCollisions(bounds));
 		} else {
 			temp.addAll(entities);
+			temp.addAll(children.get(index).possibleCollisions(bounds));
 		}
 		
 		return temp;
@@ -192,7 +193,7 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 	protected List<E> getAllChildNodeEntities() {
 		List<E> temp = new ArrayList<>(entities);
 		
-		if(!children.isEmpty()) {
+		if(hasChildren()) {
 			for (int i = 0; i < numberOfChildren; i++) {
 				temp.addAll(children.get(i).getAllChildNodeEntities());
 			}
