@@ -3,6 +3,11 @@ package se.afsa.quadtree;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mattias Jönsson
+ * This class represents a node in a quad-tree.
+ * @param <E> - the type of objects this tree should hold.
+ */
 public class QuadTreeNode<E extends QuadTreeElement> {
 	
 	private final int depthLevel;
@@ -19,6 +24,9 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		this.tree = tree;
 	}
 	
+	/**
+	 * Split the node into four children.
+	 */
 	protected void split() {
 		for (int i = 0; i < numberOfChildren; i++) {
 			children.add(i, new QuadTreeNode<>(depthLevel + 1, area.split(i), tree));
@@ -27,6 +35,9 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		moveEntities();
 	}
 	
+	/**
+	 * Merge nodes with to few elements.
+	 */
 	protected void merge() {
 		if(hasChildren()) {
 			boolean shouldRemove = true;
@@ -84,6 +95,11 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		append(entity);
 	}
 	
+	/**
+	 * Get where to insert the child.
+	 * @param bounds - the child's bounds.
+	 * @return The index for the child. -1 is parent.
+	 */
 	private int getIndex(Bounds bounds) {
 		int x, y;
 		
@@ -94,7 +110,8 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 			return -1;
 		}
 		
-		int tot = 2*x + y;
+		//Make it possible to detect x, y with one comparison.
+		int tot = 2*x + y; 
 		
 		switch (tot) {
 			case 3:
@@ -127,6 +144,11 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		return 1;
 	}
 	
+	/**
+	 * Get the max value of ints.
+	 * @param ints - the ints.
+	 * @return The largest int.
+	 */
 	private int max(int[] ints) {
 		int maxValue;
 		
@@ -143,6 +165,9 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		return maxValue;
 	}
 	
+	/**
+	 * Move entities after a split.
+	 */
 	private void moveEntities() {
 		List<E> temp = new ArrayList<>(entities);
 		int tempLength = entitiesLength;
@@ -154,6 +179,10 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		}
 	}
 
+	/**
+	 * Remove all objects in the tree that is instance of className.
+	 * @param className - the type of objects to remove.
+	 */
 	protected <T extends QuadTreeElement> void clear(Class<T> className) {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < entitiesLength; i++) {
@@ -172,6 +201,11 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		}
 	}
 	
+	/**
+	 * Get a list of possible collisions with a specific area.
+	 * @param bounds - the area to test for collisions.
+	 * @return The objects that could collide with the area.
+	 */
 	protected List<E> possibleCollisions(Bounds bounds) {
 		List<E> temp = new ArrayList<>();
 		int index = getIndex(bounds);
@@ -190,6 +224,10 @@ public class QuadTreeNode<E extends QuadTreeElement> {
 		return temp;
 	}
 	
+	/**
+	 * Get all entities form the children nodes.
+	 * @return All the children.
+	 */
 	protected List<E> getAllChildNodeEntities() {
 		List<E> temp = new ArrayList<>(entities);
 		

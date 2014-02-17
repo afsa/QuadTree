@@ -2,6 +2,11 @@ package se.afsa.quadtree;
 
 import java.util.List;
 
+/**
+ * @author Mattias Jönsson
+ * A quad-tree creates partitions of a larger area which makes it less expensive to detect collisions. 
+ * @param <E> - the type of objects this tree should hold.
+ */
 public class QuadTree<E extends QuadTreeElement> {
 	private int
 			maxDepth,
@@ -28,12 +33,20 @@ public class QuadTree<E extends QuadTreeElement> {
 		root.addEntity(entity);
 	}
 	
+	/**
+	 * Add a list of entities.
+	 * @param entities - the list.
+	 */
 	public void addEntities(List<E> entities) {
 		for (int i = 0; i < entities.size(); i++) {
 			addEntity(entities.get(i));
 		}
 	}
 	
+	/**
+	 * Remove all objects in the tree that is instance of className.
+	 * @param className - the type of objects to remove.
+	 */
 	public <T extends QuadTreeElement> void clear(Class<T> className) {
 		if(className == QuadTreeElement.class) {
 			root = new QuadTreeNode<>(0, area, this);
@@ -55,6 +68,11 @@ public class QuadTree<E extends QuadTreeElement> {
 		return root.depth();
 	}
 	
+	/**
+	 * Get a list of possible collisions with a specific area.
+	 * @param bounds - the area to test for collisions.
+	 * @return The objects that could collide with the area.
+	 */
 	public List<E> getPossibleCollisions(Bounds bounds) {
 		return root.possibleCollisions(bounds);
 	}

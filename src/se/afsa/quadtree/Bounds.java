@@ -1,5 +1,10 @@
 package se.afsa.quadtree;
 
+/**
+ * @author Mattias Jönsson
+ * Create a rectangle that partition a larger rectangle.
+ *
+ */
 public class Bounds {
 	private double[] values = new double[4];
 	
@@ -42,6 +47,12 @@ public class Bounds {
 		return (getMinY()+getMaxY())/2;
 	}
 	
+	
+	/**
+	 * Split the bounds into smaller bounds.
+	 * @param i - the quadrant number.
+	 * @return The quadrant i.
+	 */
 	public Bounds split(int i) {
 		double
 			tempMinX = (i == 0 || i == 3) ? getMidX() : getMinX(),
